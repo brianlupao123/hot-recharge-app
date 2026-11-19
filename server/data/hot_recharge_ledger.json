@@ -1,0 +1,85 @@
+{
+  "users": [
+    {
+      "id": "USR-AU-001",
+      "name": "Brian Lupao",
+      "phone": "0784529134",
+      "email": "brianlupao123@gmail.com",
+      "pinHash": "40485c4f705d602130ecb0968fe43c2685a96813b45729ab22304dacb9ff33db",
+      "salt": "850191f25022a3c2f2a9e00202e37518",
+      "walletBalanceUsd": 142.5,
+      "walletBalanceZig": 2850,
+      "createdAt": "2026-11-19T11:50:16.911Z",
+      "lastLogin": "2026-11-19T14:16:02.122Z"
+    },
+    {
+      "id": "USR-1795089017004",
+      "name": "Test Member",
+      "phone": "0782060610",
+      "email": "user1795089016997@africau.edu",
+      "pinHash": "1a8fcfa4b59475eab8c4bb44da720d7bffd3fdd505cf09ce688de54e2ab41be6",
+      "salt": "595a897a7f085dea90d070cdea7eec70",
+      "walletBalanceUsd": 50,
+      "walletBalanceZig": 1000,
+      "createdAt": "2026-11-19T11:50:17.004Z",
+      "lastLogin": "2026-11-19T11:50:17.012Z"
+    },
+    {
+      "id": "USR-1795097762201",
+      "name": "Test Member",
+      "phone": "0785437185",
+      "email": "user1795097762175@africau.edu",
+      "pinHash": "6e45adeda321a3ca68a67f1b6bea1ab727dd328bc7d61c14a48ab898d9f0fc1a",
+      "salt": "f9dc2867e7b8de4bc1abc354ea711168",
+      "walletBalanceUsd": 50,
+      "walletBalanceZig": 1000,
+      "createdAt": "2026-11-19T14:16:02.201Z",
+      "lastLogin": "2026-11-19T14:16:02.243Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "TXN-INIT-001",
+      "userId": "USR-AU-001",
+      "reference": "HOT-SEED-01",
+      "agentReference": "AGY-AU-448",
+      "productId": 41,
+      "productName": "ZETDC Prepaid Electricity (USD)",
+      "target": "04192837461",
+      "customerName": "Brian Lupao",
+      "amount": 20,
+      "currency": "USD",
+      "token": "4921-8832-1094-5531-2849",
+      "kwh": 114.5,
+      "receiptNumber": "REC-9948201",
+      "status": "SUCCESS",
+      "timestamp": "2026-11-17T11:50:16.916Z",
+      "vatAmount": 3,
+      "paymentRail": "EcoCash USD"
+    },
+    {
+      "id": "TXN-INIT-002",
+      "userId": "USR-AU-001",
+      "reference": "HOT-SEED-02",
+      "agentReference": "AGY-AU-449",
+      "productId": 101,
+      "productName": "Econet Mobile Airtime (USD)",
+      "target": "0784529134",
+      "customerName": "Brian Lupao",
+      "amount": 5,
+      "currency": "USD",
+      "receiptNumber": "REC-9948202",
+      "status": "SUCCESS",
+      "timestamp": "2026-11-18T11:50:16.916Z",
+      "vatAmount": 0.75,
+      "paymentRail": "OneMoney"
+    }
+  ],
+  "reservations": [],
+  "auditLogs": [],
+  "meta": {
+    "initializedAt": "2026-11-19T11:50:16.916Z",
+    "lastUpdated": "2026-11-19T14:16:02.243Z",
+    "version": "1.2.0-secure"
+  }
+}

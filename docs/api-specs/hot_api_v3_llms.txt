@@ -1,0 +1,19 @@
+# Hot API V3 Documentation
+
+> Recharge API for Zimbabwean Mobile Network operators and Services
+
+## API Reference: Hot API v3
+- [Getting Started With API](https://hot-api-v3.readme.io/reference/getting-started-with-your-api.md): This page will help you get started with the Hot Recharge API
+- [Authentication](https://hot-api-v3.readme.io/reference/authentication.md): The authentication scheme used by API
+  - [Login](https://hot-api-v3.readme.io/reference/login.md): How to get a JWT Token from API
+  - [Refreshing Token](https://hot-api-v3.readme.io/reference/refreshing-token.md): Refreshing Hot JWT Token
+- [Account Management](https://hot-api-v3.readme.io/reference/accout-management.md): Getting details about your account
+  - [Balances](https://hot-api-v3.readme.io/reference/balances.md)
+- [Getting Information](https://hot-api-v3.readme.io/reference/products.md): These functions allow you to get information from the Hot Recharge API
+  - [Available Products](https://hot-api-v3.readme.io/reference/available-products.md): Get a list of Products available on the API, to find Bundles see Check available Stock using a ProductId from below
+  - [Check Available Stock](https://hot-api-v3.readme.io/reference/check-stock.md): Method for checking available stock and available Bundles using ProductId
+  - [Check Customer](https://hot-api-v3.readme.io/reference/check-customer.md): Method for checking Customer details.
+- [Recharging a Product](https://hot-api-v3.readme.io/reference/query-api.md): Methods for querying data from the API
+  - [Recharge Product](https://hot-api-v3.readme.io/reference/recharge-product.md): This is how to recharge an account with the different products available with HOT Recharge.
+  - [Check Previous Transaction](https://hot-api-v3.readme.io/reference/check-previous-transaction.md): How to get the result of previous transaction
+  - [Complete Reserved Recharge](https://hot-api-v3.readme.io/reference/complete-reserved-recharge.md): This is how to complete a reserved recharge.

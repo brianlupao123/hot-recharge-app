@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: hot-recharge-gateway
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - HOT_RECHARGE_SANDBOX=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
