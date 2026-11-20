@@ -66,7 +66,7 @@ React Native, Expo (Android & iOS), TypeScript, JavaScript (Node.js/Express), Py
 **Project Name:** HOT Recharge Next-Gen Mobile & API Gateway  
 **Live Public Web Deployment:** https://hot-recharge-zimbabwe.vercel.app  
 **Local Gateway:** http://localhost:5000 (API & WebSockets)  
-**Repository:** https://github.com/brianlupao/hot-recharge-app  
+**Repository:** https://github.com/brianlupao123/hot-recharge-app  
 
 #### Key Innovations Built for the Challenge:
 1. **Full HOT Recharge V3 API Compliance:** Integrates official endpoints for ZETDC Prepaid Electricity (`ProductId: 41` USD / `24` ZiG), Econet (`101`), NetOne (`102`), Telecel (`103`), and Data & WhatsApp Bundles (`111`).
