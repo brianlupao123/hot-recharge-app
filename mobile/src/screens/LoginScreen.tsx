@@ -97,10 +97,14 @@ export default function LoginScreen({ navigation, route }: any) {
 
   const handleBiometricUnlock = async () => {
     try {
-      await login(signInIdentifier || '0784529134', '1234');
-      navigation.replace('MainTabs');
+      const session = await AuthService.getSession();
+      if (session.user) {
+        navigation.replace('MainTabs');
+      } else {
+        Alert.alert('Biometric Login', 'Please sign in with your PIN first to register biometrics.');
+      }
     } catch {
-      Alert.alert('Biometric Login', 'Please sign in with your PIN first to register biometrics.');
+      Alert.alert('Biometric Login', 'Please sign in with your PIN first.');
     }
   };
 

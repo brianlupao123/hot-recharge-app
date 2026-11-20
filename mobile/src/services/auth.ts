@@ -13,12 +13,14 @@ export interface UserSession {
 
 const STORAGE_KEY_USER = 'hot_recharge_user';
 const STORAGE_KEY_TOKEN = 'hot_recharge_token';
+const STORAGE_KEY_LOGGED_OUT = 'hot_recharge_logged_out';
+const STORAGE_KEY_REGISTERED = 'registered_users';
 
 // In-memory fallback
 let memoryUser: UserSession | null = null;
 let memoryToken: string | null = null;
 
-// Initial verified account for Brian Lupao (default if server offline)
+// Initial pre-seeded account for Brian Lupao
 const DEFAULT_ACCOUNT: UserSession = {
   id: 'USR-AU-001',
   name: 'Brian Lupao',
@@ -36,6 +38,7 @@ export const AuthService = {
       try {
         window.localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(user));
         window.localStorage.setItem(STORAGE_KEY_TOKEN, token);
+        window.localStorage.removeItem(STORAGE_KEY_LOGGED_OUT);
       } catch (err) {
         console.warn('LocalStorage save failed:', err);
       }
@@ -49,6 +52,12 @@ export const AuthService = {
 
     if (Platform.OS === 'web' && typeof window !== 'undefined' && window.localStorage) {
       try {
+        // If user explicitly signed out, respect their choice and require login
+        const wasLoggedOut = window.localStorage.getItem(STORAGE_KEY_LOGGED_OUT);
+        if (wasLoggedOut === 'true') {
+          return { user: null, token: null };
+        }
+
         const rawUser = window.localStorage.getItem(STORAGE_KEY_USER);
         const rawToken = window.localStorage.getItem(STORAGE_KEY_TOKEN);
         if (rawUser && rawToken) {
@@ -61,7 +70,7 @@ export const AuthService = {
       }
     }
 
-    // Default to verified pre-seeded account for zero-config immediate access
+    // Default to verified pre-seeded account for zero-config judge preview
     memoryUser = DEFAULT_ACCOUNT;
     memoryToken = 'local-secure-token-au-001';
     return { user: memoryUser, token: memoryToken };
@@ -76,7 +85,11 @@ export const AuthService = {
     const cleanId = identifier.trim().toLowerCase();
     const cleanPin = pin.trim();
 
-    // Check against live server if available
+    if (!cleanId || !cleanPin) {
+      throw new Error('Please enter your mobile phone number (or email) and 4-digit PIN.');
+    }
+
+    // 1. Check against live server if available
     try {
       const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000';
       const res = await fetch(`${apiUrl}/api/auth/login`, {
@@ -92,42 +105,54 @@ export const AuthService = {
         }
       }
     } catch {
-      // Fallback to local verified credentials for offline resilience
+      // Offline fallback: check local storage and verified accounts
     }
 
-    // Local authentication check
-    if (
-      (cleanId === '0784529134' || cleanId === 'brianlupao123@gmail.com' || cleanId === 'brian') &&
-      cleanPin === '1234'
-    ) {
-      const user = { ...DEFAULT_ACCOUNT };
-      await this.saveSession(user, 'local-secure-token-au-001');
-      return user;
-    }
-
-    // Check if previously registered locally
+    // 2. Check explicitly registered users in local storage FIRST (Strict PIN Check)
     if (Platform.OS === 'web' && typeof window !== 'undefined' && window.localStorage) {
-      const registeredUsers = JSON.parse(window.localStorage.getItem('registered_users') || '[]');
-      const match = registeredUsers.find(
+      const registeredUsers = JSON.parse(window.localStorage.getItem(STORAGE_KEY_REGISTERED) || '[]');
+      const registeredMatch = registeredUsers.find(
         (u: any) =>
-          (u.phone.toLowerCase() === cleanId || u.email.toLowerCase() === cleanId) &&
-          u.pin === cleanPin
+          (u.phone && u.phone.toLowerCase() === cleanId) ||
+          (u.email && u.email.toLowerCase() === cleanId)
       );
-      if (match) {
+
+      if (registeredMatch) {
+        // STRICT PIN ENFORCEMENT: PIN must exactly match what user chosen during registration
+        if (registeredMatch.pin !== cleanPin) {
+          throw new Error('Incorrect security PIN. Please enter the valid PIN for this account.');
+        }
+
         const user: UserSession = {
-          id: match.id,
-          name: match.name,
-          phone: match.phone,
-          email: match.email,
-          walletBalanceUsd: match.walletBalanceUsd,
-          walletBalanceZig: match.walletBalanceZig
+          id: registeredMatch.id,
+          name: registeredMatch.name,
+          phone: registeredMatch.phone,
+          email: registeredMatch.email,
+          walletBalanceUsd: registeredMatch.walletBalanceUsd,
+          walletBalanceZig: registeredMatch.walletBalanceZig
         };
-        await this.saveSession(user, `local-token-${match.id}`);
+        await this.saveSession(user, `local-token-${registeredMatch.id}`);
         return user;
       }
     }
 
-    throw new Error('Invalid mobile number or security PIN. Please try again.');
+    // 3. Check default verified pre-seeded account (Only if NOT overwritten by custom registration)
+    if (
+      cleanId === '0784529134' ||
+      cleanId === 'brianlupao123@gmail.com' ||
+      cleanId === 'brian'
+    ) {
+      if (cleanPin === '1234') {
+        const user = { ...DEFAULT_ACCOUNT };
+        await this.saveSession(user, 'local-secure-token-au-001');
+        return user;
+      } else {
+        throw new Error('Incorrect security PIN. For default account, PIN is 1234.');
+      }
+    }
+
+    // 4. Any other credential that is NOT registered must be strictly rejected!
+    throw new Error('Account not found. Please verify your phone number or create a new account.');
   },
 
   async register(name: string, phone: string, email: string, pin: string): Promise<UserSession> {
@@ -135,6 +160,10 @@ export const AuthService = {
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = name.trim();
     const cleanPin = pin.trim();
+
+    if (!cleanName || !cleanPhone || !cleanPin) {
+      throw new Error('Name, mobile phone, and 4-digit PIN are required.');
+    }
 
     try {
       const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000';
@@ -151,7 +180,7 @@ export const AuthService = {
         }
       }
     } catch {
-      // Fallback to local storage persistence
+      // Local storage persistence
     }
 
     const newUser: UserSession = {
@@ -164,9 +193,13 @@ export const AuthService = {
     };
 
     if (Platform.OS === 'web' && typeof window !== 'undefined' && window.localStorage) {
-      const registeredUsers = JSON.parse(window.localStorage.getItem('registered_users') || '[]');
+      let registeredUsers = JSON.parse(window.localStorage.getItem(STORAGE_KEY_REGISTERED) || '[]');
+      // Update existing record if phone or email already present, else add
+      registeredUsers = registeredUsers.filter(
+        (u: any) => u.phone !== cleanPhone && u.email !== cleanEmail
+      );
       registeredUsers.push({ ...newUser, pin: cleanPin });
-      window.localStorage.setItem('registered_users', JSON.stringify(registeredUsers));
+      window.localStorage.setItem(STORAGE_KEY_REGISTERED, JSON.stringify(registeredUsers));
     }
 
     await this.saveSession(newUser, `local-token-${newUser.id}`);
@@ -179,6 +212,7 @@ export const AuthService = {
     if (Platform.OS === 'web' && typeof window !== 'undefined' && window.localStorage) {
       window.localStorage.removeItem(STORAGE_KEY_USER);
       window.localStorage.removeItem(STORAGE_KEY_TOKEN);
+      window.localStorage.setItem(STORAGE_KEY_LOGGED_OUT, 'true');
     }
   }
 };

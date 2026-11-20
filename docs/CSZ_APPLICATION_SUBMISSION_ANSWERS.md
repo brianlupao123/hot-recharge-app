@@ -64,7 +64,7 @@ React Native, Expo (Android & iOS), TypeScript, JavaScript (Node.js/Express), Py
 ### Additional Competition Submission Pitch & Evidence (For Follow-Up / Round 1 Interview)
 
 **Project Name:** HOT Recharge Next-Gen Mobile & API Gateway  
-**Live Public Web Deployment:** https://dist-neon-eight-53.vercel.app  
+**Live Public Web Deployment:** https://hot-recharge-zimbabwe.vercel.app  
 **Local Gateway:** http://localhost:5000 (API & WebSockets)  
 **Repository:** https://github.com/brianlupao/hot-recharge-app  
 
