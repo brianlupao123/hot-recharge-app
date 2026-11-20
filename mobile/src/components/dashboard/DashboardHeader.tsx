@@ -10,12 +10,15 @@ export interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ user, currency, onToggleCurrency }: DashboardHeaderProps) {
+  const displayName = user?.name || user?.fullName || 'Brian Lupao';
+  const displayPhone = user?.phone || user?.phoneNumber || '0784529134';
+
   return (
     <View style={dashboardStyles.header}>
       <View>
         <Text style={dashboardStyles.appName}>HOT<Text style={{ color: '#FFF' }}>recharge</Text></Text>
         <Text style={dashboardStyles.appSub}>
-          {user ? `${user.fullName} (${user.phoneNumber})` : 'Secure Utility Engine'}
+          {`${displayName} (${displayPhone})`}
         </Text>
       </View>
       <TouchableOpacity

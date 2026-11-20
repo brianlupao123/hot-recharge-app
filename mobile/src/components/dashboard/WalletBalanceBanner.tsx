@@ -35,7 +35,7 @@ export function WalletBalanceBanner({
           </Button>
         </View>
         <View style={dashboardStyles.balanceMetaRow}>
-          <Text style={dashboardStyles.balanceMeta}>Account: {user?.fullName || 'Account Holder'}</Text>
+          <Text style={dashboardStyles.balanceMeta}>Account: {user?.name || user?.fullName || 'Brian Lupao'}</Text>
           <Text style={dashboardStyles.balanceNetwork}>EcoCash / OneMoney Linked</Text>
         </View>
       </Card.Content>

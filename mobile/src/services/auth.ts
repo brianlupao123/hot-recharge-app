@@ -7,6 +7,8 @@ export interface UserSession {
   email: string;
   walletBalanceUsd: number;
   walletBalanceZig: number;
+  fullName?: string;
+  phoneNumber?: string;
   createdAt?: string;
   token?: string;
 }
@@ -27,7 +29,9 @@ const DEFAULT_ACCOUNT: UserSession = {
   phone: '0784529134',
   email: 'brianlupao123@gmail.com',
   walletBalanceUsd: 142.50,
-  walletBalanceZig: 2850.00
+  walletBalanceZig: 2850.00,
+  fullName: 'Brian Lupao',
+  phoneNumber: '0784529134'
 };
 
 export const AuthService = {
@@ -129,7 +133,9 @@ export const AuthService = {
           phone: registeredMatch.phone,
           email: registeredMatch.email,
           walletBalanceUsd: registeredMatch.walletBalanceUsd,
-          walletBalanceZig: registeredMatch.walletBalanceZig
+          walletBalanceZig: registeredMatch.walletBalanceZig,
+          fullName: registeredMatch.name,
+          phoneNumber: registeredMatch.phone
         };
         await this.saveSession(user, `local-token-${registeredMatch.id}`);
         return user;
@@ -189,7 +195,9 @@ export const AuthService = {
       phone: cleanPhone,
       email: cleanEmail,
       walletBalanceUsd: 50.00,
-      walletBalanceZig: 1000.00
+      walletBalanceZig: 1000.00,
+      fullName: cleanName,
+      phoneNumber: cleanPhone
     };
 
     if (Platform.OS === 'web' && typeof window !== 'undefined' && window.localStorage) {

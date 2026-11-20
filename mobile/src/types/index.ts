@@ -5,6 +5,8 @@ export interface UserProfile {
   email: string;
   walletBalanceUsd: number;
   walletBalanceZig: number;
+  fullName?: string;
+  phoneNumber?: string;
   createdAt?: string;
   lastLogin?: string;
 }
