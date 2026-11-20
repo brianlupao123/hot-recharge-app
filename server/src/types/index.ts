@@ -33,6 +33,7 @@ export interface RechargeRequest {
   rechargeOptions?: {
     makeReservation?: boolean;
     sendReservationSMSToCustomer?: boolean;
+    productCode?: string;
   };
 }
 

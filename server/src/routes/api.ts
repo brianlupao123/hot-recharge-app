@@ -3,6 +3,7 @@ import { hotRechargeAdapter } from '../adapters/hotRechargeV3';
 import { DATA_BUNDLES, calculateZesaUnits } from '../services/mockData';
 import { RechargeRequest, PaymentInitiationRequest } from '../types';
 import { Database } from '../services/database';
+import { zimraFiscalService } from '../services/zimraFiscal';
 
 export const apiRouter = Router();
 
@@ -219,4 +220,28 @@ apiRouter.post('/payments/initiate', (req: Request, res: Response) => {
     promptSentTo: payment.phoneNumber,
     message: `Payment of ${payment.currency} ${payment.amount.toFixed(2)} received via ${payment.paymentMethod}.`
   });
+});
+
+// 13. ZIMRA S.I. 127 Fiscal Tax Invoice Generation & Verification
+apiRouter.post('/fiscal/invoice', (req: Request, res: Response) => {
+  try {
+    const { transactionId, receiptNumber, customerName, amount, currency, productDescription, taxPayerNumber } = req.body;
+    if (!amount || !customerName) {
+      return res.status(400).json({ success: false, error: 'Missing required parameters: amount, customerName' });
+    }
+
+    const fiscal = zimraFiscalService.generateFiscalInvoice({
+      transactionId: transactionId || `TXN-${Date.now()}`,
+      receiptNumber: receiptNumber || `REC-${Date.now().toString().slice(-7)}`,
+      customerName,
+      taxPayerNumber,
+      amount: typeof amount === 'number' ? amount : parseFloat(amount),
+      currency: currency || 'USD',
+      productDescription: productDescription || 'ZETDC Electricity / Airtime Recharge'
+    });
+
+    res.json({ success: true, fiscal });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });

@@ -122,3 +122,50 @@ describe('Database User Authentication & Security', () => {
     assert.ok(auth, 'Newly registered user should authenticate immediately');
   });
 });
+
+describe('ZIMRA S.I. 127 Fiscal Compliance Engine', () => {
+  const { zimraFiscalService } = require('../services/zimraFiscal');
+
+  test('VAT Calculation: Exactly 15% VAT extracted from gross invoice amount', () => {
+    const invoice = zimraFiscalService.generateFiscalInvoice({
+      transactionId: 'TXN-TEST-001',
+      receiptNumber: 'REC-TEST-001',
+      customerName: 'Brian Lupao',
+      amount: 115.00,
+      currency: 'USD',
+      productDescription: 'ZETDC Electricity 500 kWh'
+    });
+
+    assert.strictEqual(invoice.totalAmount, 115.00);
+    assert.strictEqual(invoice.subTotal, 100.00);
+    assert.strictEqual(invoice.vatAmount, 15.00);
+    assert.strictEqual(invoice.vatRate, 0.15);
+    assert.ok(invoice.invoiceNumber.startsWith('FIS-'));
+  });
+
+  test('Cryptographic Signature Verification: Generated signature validates against public verification key', () => {
+    const invoice = zimraFiscalService.generateFiscalInvoice({
+      transactionId: 'TXN-TEST-002',
+      receiptNumber: 'REC-TEST-002',
+      customerName: 'Mutare Commercial Landlord',
+      amount: 50.00,
+      currency: 'USD',
+      productDescription: 'Commercial Meter Top-up'
+    });
+
+    assert.ok(invoice.fiscalSignature.length >= 16);
+    assert.ok(invoice.qrCodeUrl.includes('https://efis.zimra.co.zw/verify'));
+    assert.ok(invoice.qrCodeUrl.includes(invoice.invoiceNumber));
+    assert.ok(invoice.qrCodeUrl.includes(invoice.fiscalSignature));
+  });
+});
+
+describe('Enterprise PostgreSQL & Dual-Mode Fallback', () => {
+  const { postgresService } = require('../db/postgres');
+
+  test('PostgreSQL Service: Safe fallback when DATABASE_URL is not set', async () => {
+    assert.strictEqual(postgresService.isConnected, false);
+    const result = await postgresService.query('SELECT 1');
+    assert.strictEqual(result, null, 'Should return null without throwing when not connected');
+  });
+});

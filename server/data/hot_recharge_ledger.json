@@ -10,7 +10,7 @@
       "walletBalanceUsd": 142.5,
       "walletBalanceZig": 2850,
       "createdAt": "2026-11-19T11:50:16.911Z",
-      "lastLogin": "2026-11-19T14:16:02.122Z"
+      "lastLogin": "2026-11-20T02:57:18.907Z"
     },
     {
       "id": "USR-1795089017004",
@@ -35,6 +35,18 @@
       "walletBalanceZig": 1000,
       "createdAt": "2026-11-19T14:16:02.201Z",
       "lastLogin": "2026-11-19T14:16:02.243Z"
+    },
+    {
+      "id": "USR-1795143439113",
+      "name": "Test Member",
+      "phone": "0781913469",
+      "email": "user1795143439101@africau.edu",
+      "pinHash": "a643948622800bd7afcff40615d903c4322cedd31a72f9c0d8a5cb6b150f2389",
+      "salt": "e6918abc9967ea8611e336bb096c9aa0",
+      "walletBalanceUsd": 50,
+      "walletBalanceZig": 1000,
+      "createdAt": "2026-11-20T02:57:19.113Z",
+      "lastLogin": "2026-11-20T02:57:19.192Z"
     }
   ],
   "transactions": [
@@ -79,7 +91,7 @@
   "auditLogs": [],
   "meta": {
     "initializedAt": "2026-11-19T11:50:16.916Z",
-    "lastUpdated": "2026-11-19T14:16:02.243Z",
+    "lastUpdated": "2026-11-20T02:57:19.192Z",
     "version": "1.2.0-secure"
   }
 }

@@ -5,6 +5,7 @@ import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import { apiRouter } from './routes/api';
 import { authRouter } from './routes/auth';
+import webhooksRouter from './routes/webhooks';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -50,6 +51,7 @@ app.use(express.json({ limit: '1mb' }));
 // API Routes
 app.use('/api/auth', authRouter);
 app.use('/api/v3', apiRouter);
+app.use('/api/webhooks', webhooksRouter);
 
 // Health & System Info
 app.get('/api/health', (_req, res) => {
